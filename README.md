@@ -121,30 +121,68 @@ sistema-cadastro-clientes/
 
 ---
 
-## ▶️ Como Executar o Projeto Localmente
+## 🚀 Como Executar o Projeto Localmente
+
+1. Clone o repositório:
 
 ```bash
 git clone https://github.com/paulodevpy/sistema-cadastro-clientes.git
 cd sistema-cadastro-clientes
+```
 
-# cria ambiente virtual (opcional, mas recomendado)
+2. Crie e ative o ambiente virtual:
+
+```bash
 python -m venv venv
+
 # Windows
 venv\Scripts\activate
+
 # Linux/Mac
 source venv/bin/activate
-
-# instala dependências
-pip install -r requirements.txt
-
-# roda o servidor
-python app.py
-
-# Após executar, acesse no navegador:
-http://127.0.0.1:5000
-
-# Usuários de teste:
-Admin: admin / admin123
-Visualização: user / user123
-
 ```
+
+3. Instale as dependências:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Execute a aplicação:
+
+```bash
+python app.py
+```
+
+5. Acesse no navegador:
+
+```text
+http://127.0.0.1:5000
+```
+
+### 🔑 Usuários de Teste
+
+- **Admin:** `admin / admin123`  
+- **Somente leitura:** `user / user123`
+
+---
+
+## 💼 Projeto Profissional para Portfólio
+
+Este projeto demonstra:
+
+- Backend completo com Flask  
+- Autenticação e autorização por nível de acesso  
+- API REST integrada  
+- Dashboard com gráficos  
+- Exportação de dados (Excel e CSV)  
+- Interface moderna baseada em painel administrativo  
+
+Pode ser facilmente adaptado para:
+
+- Clínicas  
+- Escritórios  
+- Consultorias  
+- Imobiliárias  
+- Academias  
+- Empresas em geral 
