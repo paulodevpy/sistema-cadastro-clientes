@@ -117,9 +117,11 @@ sistema-cadastro-clientes/
 │  └─ customer_form.html
 └─ static/
    └─ styles.css
+```
 
+---
 
-## 🚀 Como executar
+## ▶️ Como Executar o Projeto Localmente
 
 ```bash
 git clone https://github.com/paulodevpy/sistema-cadastro-clientes.git
@@ -144,3 +146,5 @@ http://127.0.0.1:5000
 # Usuários de teste:
 Admin: admin / admin123
 Visualização: user / user123
+
+```
