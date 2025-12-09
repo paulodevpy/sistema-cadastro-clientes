@@ -1,58 +1,194 @@
 {% extends "base.html" %}
 
-{% block title %}Clientes - Sistema de Clientes{% endblock %}
+{% block title %}Clientes · Sistema de Clientes{% endblock %}
 
 {% block content %}
-<div class="card">
-  <div class="card-header">
-    <h2>Clientes</h2>
-    <a class="btn" href="{{ url_for('create_customer') }}">+ Novo Cliente</a>
-  </div>
 
-  <form method="get" class="search-form">
-    <input
-      type="text"
-      name="q"
-      placeholder="Buscar por nome, e-mail ou telefone"
-      value="{{ search or '' }}"
-    />
-    <button type="submit">Buscar</button>
-  </form>
+  <!-- DASHBOARD -->
+  <section class="section">
+    <div class="dashboard-grid">
+      <div class="dashboard-card">
+        <span>Total de clientes</span>
+        <strong>{{ total_clientes }}</strong>
+      </div>
 
-  {% if customers %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>E-mail</th>
-        <th>Telefone</th>
-        <th>Criado em</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for c in customers %}
-      <tr>
-        <td>{{ c.nome }}</td>
-        <td>{{ c.email or '-' }}</td>
-        <td>{{ c.telefone or '-' }}</td>
-        <td>{{ c.criado_em.strftime('%d/%m/%Y %H:%M') }}</td>
-        <td class="actions">
-          <a href="{{ url_for('edit_customer', customer_id=c.id) }}">Editar</a>
-          <form
-            method="post"
-            action="{{ url_for('delete_customer', customer_id=c.id) }}"
-            onsubmit="return confirm('Tem certeza que deseja excluir este cliente?');"
-          >
-            <button type="submit" class="btn-danger">Excluir</button>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <p>Nenhum cliente cadastrado ainda.</p>
-  {% endif %}
-</div>
+      <div class="dashboard-card">
+        <span>Clientes com email</span>
+        <strong>{{ clientes_com_email }}</strong>
+      </div>
+
+      <div class="dashboard-card">
+        <span>Clientes com telefone</span>
+        <strong>{{ clientes_com_telefone }}</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRAFICO -->
+  <section class="section">
+    <header class="section-header">
+      <div>
+        <h2>Evolucao de cadastros</h2>
+        <p class="hint">
+          Quantidade de clientes cadastrados por mes.
+        </p>
+      </div>
+    </header>
+
+    <div class="card">
+      <canvas id="clientesPorMesChart" style="max-height: 260px;"></canvas>
+    </div>
+  </section>
+
+  <!-- LISTAGEM -->
+  <section class="section">
+    <header class="section-header">
+      <div>
+        <h2>Clientes</h2>
+        <p class="hint">
+          Gerencie sua base de clientes: cadastre, atualize e organize os dados.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem;">
+        {% if session.get("role") == "admin" %}
+          <a class="btn btn-secondary" href="{{ url_for('export_customers') }}">
+            Exportar Excel
+          </a>
+          <a class="btn btn-primary" href="{{ url_for('create_customer') }}">
+            + Novo cliente
+          </a>
+        {% endif %}
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <form method="get" class="search-form">
+        <input
+          type="text"
+          name="q"
+          placeholder="Buscar por nome, email ou telefone"
+          value="{{ search or '' }}"
+        />
+        <button type="submit" class="btn btn-secondary">Buscar</button>
+      </form>
+
+      <div class="toolbar-info">
+        <span>
+          {% if customers %}
+            {{ customers|length }} cliente(s) encontrado(s)
+          {% else %}
+            Nenhum cliente encontrado
+          {% endif %}
+        </span>
+      </div>
+    </div>
+
+    <div class="card">
+      {% if customers %}
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Criado em</th>
+                <th style="width: 140px;">Acoes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for c in customers %}
+                <tr>
+                  <td>{{ c.nome }}</td>
+                  <td>{{ c.email or "-" }}</td>
+                  <td>{{ c.telefone or "-" }}</td>
+                  <td>
+                    {% if c.criado_em %}
+                      {{ c.criado_em.strftime("%d/%m/%Y %H:%M") }}
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+                  <td class="actions">
+                    {% if session.get("role") == "admin" %}
+                      <a
+                        href="{{ url_for('edit_customer', customer_id=c.id) }}"
+                        class="link-action"
+                      >
+                        Editar
+                      </a>
+
+                      <form
+                        method="post"
+                        action="{{ url_for('delete_customer', customer_id=c.id) }}"
+                        onsubmit="return confirm('Deseja realmente excluir este cliente?');"
+                      >
+                        <button type="submit" class="btn btn-danger btn-sm">
+                          Excluir
+                        </button>
+                      </form>
+                    {% else %}
+                      <span class="hint small">Somente leitura</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="hint">
+          Nenhum cliente cadastrado ainda.
+        </p>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- SCRIPT DO GRAFICO -->
+  <script>
+    (function () {
+      const ctx = document.getElementById("clientesPorMesChart");
+      if (!ctx) return;
+
+      const labels = {{ chart_labels | tojson }};
+      const values = {{ chart_values | tojson }};
+
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Clientes cadastrados",
+              data: values,
+              borderWidth: 2,
+              tension: 0.3,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "#9ca3af",
+              },
+            },
+            y: {
+              ticks: {
+                color: "#9ca3af",
+              },
+              beginAtZero: true,
+              precision: 0,
+            },
+          },
+        },
+      });
+    })();
+  </script>
 {% endblock %}

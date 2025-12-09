@@ -4,39 +4,104 @@
     <meta charset="utf-8" />
     <title>{% block title %}Sistema de Clientes{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <header class="topbar">
-      <div class="container">
-        <h1 class="logo">Sistema de Clientes</h1>
-        <nav>
+      <div class="container topbar-inner">
+        <div class="logo">
+          <span class="logo-mark">SC</span>
+          <div class="logo-text">
+            <strong>Sistema de Clientes</strong>
+            <small>
+              Painel ·
+              {% if session.get("role") == "admin" %}
+                Admin
+              {% elif session.get("role") == "viewer" %}
+                Somente leitura
+              {% else %}
+                Desconhecido
+              {% endif %}
+            </small>
+          </div>
+        </div>
+
+        <nav class="nav">
           {% if session.get("logged_in") %}
-          <a href="{{ url_for('list_customers') }}">Clientes</a>
-          <a href="{{ url_for('logout') }}">Sair</a>
+            <a href="{{ url_for('list_customers') }}">Clientes</a>
+            <a href="{{ url_for('logout') }}" class="nav-exit">Sair</a>
+          {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
           {% endif %}
         </nav>
       </div>
     </header>
 
-    <main class="container">
-      {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-      <div class="flash-container">
-        {% for category, message in messages %}
-        <div class="flash flash-{{ category }}">{{ message }}</div>
-        {% endfor %}
-      </div>
-      {% endif %}
-      {% endwith %}
+    <main class="page">
+      <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-container">
+              {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
 
-      {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
+      </div>
     </main>
 
     <footer class="footer">
       <div class="container">
-        <p>© {{ 2025 }} - Sistema de Clientes | Desenvolvido por Paulo Trev</p>
+        <p>© {{ 2025 }} — Sistema de Clientes · Desenvolvido por Paulo Trev</p>
       </div>
     </footer>
+
+    <!-- Mascara de telefone -->
+    <script>
+      function formatPhone(value) {
+        const digits = value.replace(/\D/g, "");
+        if (digits.length <= 2) return digits;
+        if (digits.length <= 6)
+          return "(" + digits.slice(0, 2) + ") " + digits.slice(2);
+        if (digits.length <= 10)
+          return (
+            "(" +
+            digits.slice(0, 2) +
+            ") " +
+            digits.slice(2, 6) +
+            "-" +
+            digits.slice(6)
+          );
+        return (
+          "(" +
+          digits.slice(0, 2) +
+          ") " +
+          digits.slice(2, 7) +
+          "-" +
+          digits.slice(7, 11)
+        );
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const phoneInputs = document.querySelectorAll(".phone-mask");
+        phoneInputs.forEach(function (input) {
+          input.addEventListener("input", function (e) {
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const formatted = formatPhone(input.value);
+            input.value = formatted;
+            input.setSelectionRange(formatted.length, formatted.length);
+          });
+        });
+      });
+    </script>
   </body>
 </html>

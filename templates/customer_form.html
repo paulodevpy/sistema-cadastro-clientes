@@ -1,51 +1,70 @@
 {% extends "base.html" %}
 
 {% block title %}
-{% if customer %}Editar Cliente{% else %}Novo Cliente{% endif %} - Sistema de Clientes
+  {% if customer %}Editar cliente{% else %}Novo cliente{% endif %} · Sistema de Clientes
 {% endblock %}
 
 {% block content %}
-<div class="card">
-  <h2>
-    {% if customer %}Editar Cliente{% else %}Novo Cliente{% endif %}
-  </h2>
+  <section class="section">
+    <header class="section-header">
+      <div>
+        <h2>
+          {% if customer %}Editar cliente{% else %}Novo cliente{% endif %}
+        </h2>
+        <p class="hint">
+          Preencha os campos abaixo para manter a base de clientes organizada.
+        </p>
+      </div>
+    </header>
 
-  <form method="post">
-    <label for="nome">Nome *</label>
-    <input
-      type="text"
-      id="nome"
-      name="nome"
-      required
-      value="{{ customer.nome if customer else '' }}"
-    />
+    <div class="card" style="max-width: 720px;">
+      <form method="post" class="form">
+        <label for="nome">Nome *</label>
+        <input
+          type="text"
+          id="nome"
+          name="nome"
+          required
+          value="{{ customer.nome if customer else '' }}"
+          placeholder="Nome completo"
+        />
 
-    <label for="email">E-mail</label>
-    <input
-      type="email"
-      id="email"
-      name="email"
-      value="{{ customer.email if customer else '' }}"
-    />
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value="{{ customer.email if customer else '' }}"
+          placeholder="email@exemplo.com"
+        />
 
-    <label for="telefone">Telefone</label>
-    <input
-      type="text"
-      id="telefone"
-      name="telefone"
-      value="{{ customer.telefone if customer else '' }}"
-    />
+        <label for="telefone">Telefone</label>
+        <input
+          type="text"
+          id="telefone"
+          name="telefone"
+          class="phone-mask"
+          value="{{ customer.telefone if customer else '' }}"
+          placeholder="(00) 00000-0000"
+        />
 
-    <label for="observacoes">Observações</label>
-    <textarea
-      id="observacoes"
-      name="observacoes"
-      rows="4"
-    >{{ customer.observacoes if customer else '' }}</textarea>
+        <label for="observacoes">Observacoes</label>
+        <textarea
+          id="observacoes"
+          name="observacoes"
+          rows="4"
+          placeholder="Anotacoes relevantes sobre o cliente"
+        >{{ customer.observacoes if customer else '' }}</textarea>
 
-    <button type="submit">
-      {% if customer %}Salvar alterações{% else %}Cadastrar{% endif %}
-    </button>
-  </form>
-</div>
+        <div class="form-actions">
+          <a href="{{ url_for('list_customers') }}" class="btn btn-secondary">
+            Voltar
+          </a>
+          <button type="submit" class="btn btn-primary">
+            {% if customer %}Salvar alteracoes{% else %}Cadastrar cliente{% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
 {% endblock %}

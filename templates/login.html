@@ -1,19 +1,42 @@
 {% extends "base.html" %}
 
-{% block title %}Login - Sistema de Clientes{% endblock %}
+{% block title %}Login · Sistema de Clientes{% endblock %}
 
 {% block content %}
-<div class="card">
-  <h2>Login</h2>
-  <form method="post">
-    <label for="username">Usuário</label>
-    <input type="text" id="username" name="username" required />
+  <div class="auth-wrapper">
+    <div class="card auth-card">
+      <h2>Bem-vindo(a)</h2>
+      <p class="hint">
+        Acesse o painel para gerenciar os clientes.
+      </p>
 
-    <label for="password">Senha</label>
-    <input type="password" id="password" name="password" required />
+      <form method="post" class="form">
+        <label for="username">Usuario</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          required
+          autofocus
+          placeholder="Digite o usuario"
+        />
 
-    <button type="submit">Entrar</button>
-  </form>
-  <p class="hint">Usuário: <strong>admin</strong> · Senha: <strong>admin123</strong></p>
-</div>
+        <label for="password">Senha</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          placeholder="Digite a senha"
+        />
+
+        <button type="submit" class="btn btn-primary">Entrar</button>
+      </form>
+
+      <p class="hint small" style="margin-top: 0.75rem;">
+        Admin: <strong>admin / admin123</strong><br />
+        Somente leitura: <strong>user / user123</strong>
+      </p>
+    </div>
+  </div>
 {% endblock %}
