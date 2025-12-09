@@ -1,28 +1,128 @@
-# 🧾 Sistema de Cadastro de Clientes
+# 🧾 Sistema de Cadastro de Clientes (Versão PRO)
 
-Sistema web simples para cadastro e gestão de clientes, desenvolvido em **Python (Flask)** com banco de dados **SQLite**.
+Sistema web completo para gestão de clientes, desenvolvido em **Python (Flask)**, com foco em portfólio profissional.
 
-## ✨ Funcionalidades
+Este projeto vai além de um CRUD comum, incluindo **dashboard, gráficos, exportação de dados, API REST e controle de níveis de usuários**.
 
-- Login simples (usuário e senha fixos para demonstração)
-- Listagem de clientes com busca por nome, e-mail ou telefone
-- Cadastro de novos clientes
-- Edição de clientes
-- Exclusão de clientes
-- Interface limpa e responsiva
+---
 
-## 🛠️ Tecnologias
+## 🚀 Funcionalidades
+
+### 🔐 Autenticação e Níveis de Acesso
+
+- Login com dois perfis:
+  - **Admin:** acesso total ao sistema (CRUD, exportações e API completa)
+  - **Somente leitura:** apenas visualização e busca
+- Usuários padrão:
+  - `admin / admin123`
+  - `user / user123`
+
+---
+
+### 👥 Gestão de Clientes (CRUD Completo)
+
+- Cadastro de cliente
+- Edição de cliente
+- Exclusão de cliente
+- Listagem com ordenação por data
+- Busca por:
+  - Nome
+  - E-mail
+  - Telefone
+- Cadastro com:
+  - Nome
+  - E-mail
+  - Telefone (com máscara automática)
+  - Observações
+  - Data de criação automática
+
+---
+
+### 📊 Dashboard Profissional
+
+- Cards de métricas:
+  - Total de clientes
+  - Clientes com e-mail
+  - Clientes com telefone
+- Gráfico de clientes cadastrados por mês usando **Chart.js**
+
+---
+
+### 📤 Exportação de Dados
+
+- Exportação para **Excel (.xlsx)**
+- Exportação para **CSV**
+- Downloads disponíveis apenas para usuário **admin**
+
+---
+
+### 🌐 API REST Completa
+
+Endpoints disponíveis:
+
+- `GET /api/clientes`
+- `GET /api/clientes/<id>`
+- `POST /api/clientes` (admin)
+- `PUT /api/clientes/<id>` (admin)
+- `DELETE /api/clientes/<id>` (admin)
+
+API ideal para integração com:
+
+- Aplicativos Mobile
+- Frontend React
+- Sistemas terceiros
+
+---
+
+### 📱 Máscara Automática de Telefone
+
+- Formato automático ao digitar:
+  - `(11) 98765-4321`
+- Implementado em JavaScript puro
+
+---
+
+### 🔎 Busca Inteligente
+
+- Pesquisa dinâmica por nome, e-mail ou telefone
+
+---
+
+## 🛠️ Tecnologias Utilizadas
 
 - Python
 - Flask
-- Flask SQLAlchemy
+- Flask-SQLAlchemy
 - SQLite
-- HTML, CSS
+- HTML5
+- CSS3
+- JavaScript (Vanilla)
+- Chart.js
+- openpyxl
+
+---
+
+## 📂 Estrutura do Projeto
+
+```text
+sistema-cadastro-clientes/
+├─ app.py
+├─ requirements.txt
+├─ instance/
+│  └─ app.db
+├─ templates/
+│  ├─ base.html
+│  ├─ login.html
+│  ├─ customers.html
+│  └─ customer_form.html
+└─ static/
+   └─ styles.css
+
 
 ## 🚀 Como executar
 
 ```bash
-git clone https://github.com/SEU_USUARIO/sistema-cadastro-clientes.git
+git clone https://github.com/paulodevpy/sistema-cadastro-clientes.git
 cd sistema-cadastro-clientes
 
 # cria ambiente virtual (opcional, mas recomendado)
@@ -37,3 +137,10 @@ pip install -r requirements.txt
 
 # roda o servidor
 python app.py
+
+# Após executar, acesse no navegador:
+http://127.0.0.1:5000
+
+# Usuários de teste:
+Admin: admin / admin123
+Visualização: user / user123
